@@ -1,50 +1,7 @@
 """Python module for creating menu in CLI"""
 
 import math
-from typing import Any, Callable, Dict, List, Optional, Type
-
-
-class BaseMenuItem(object):
-    """Represents the underlying menu item.
-
-    This class is to be overridden by a menu item subclass that contains
-    required features for its application.
-
-    Attributes:
-        display: Display text.
-    """
-    def __init__(self, display: str):
-        """Inits BaseMenuItem with display."""
-        self.display = display
-
-
-class MenuItem(BaseMenuItem):
-    """Represents a standard menu item with a callback.
-
-    This menu item has a callback function which will be called when this item
-    is selected from the menu.
-
-    Attributes:
-        callback: Callback function.
-    """
-    def __init__(self, display: str, callback: Callable[[], None]):
-        """Inits MenuItem with display and callback."""
-        super().__init__(display)
-        self.callback = callback
-
-
-class OptionMenuItem(BaseMenuItem):
-    """Represents an option menu item with an object to be chosen.
-
-    This menu item has similar behaviour to HTML option element.
-
-    Attributes:
-        value: Underlying value.
-    """
-    def __init__(self, display: str, value: Any):
-        """Inits OptionMenuItem with display and value"""
-        super().__init__(display)
-        self.value = value
+from typing import Any, Callable, Dict, List, Optional
 
 
 class BaseMenu(object):
@@ -56,7 +13,6 @@ class BaseMenu(object):
 
     Attributes:
         name: Menu name used for title.
-        menu_item_type: MenuItem type used for each menu item.
         display_exit: Bool to show exit option.
         menu_items: List of menu items.
         exit_text: Text to be displayed for exit option.
@@ -70,10 +26,9 @@ class BaseMenu(object):
 
     def __init__(self,
                  name: Optional[str] = None,
-                 menu_item_type: Type = BaseMenuItem,
-                 display_exit: bool = True):
+                 display_exit: Optional[bool] = True):
         """Inits BaseMenu."""
-        self.menu_items: List[menu_item_type] = []
+        self.menu_items: List[Dict[str, Any]] = []
 
         self.exit_text = BaseMenu.default_exit_text
         self.invalid_option_text = BaseMenu.default_invalid_option_text
@@ -86,20 +41,19 @@ class BaseMenu(object):
         """Returns number of menu items."""
         return len(self.menu_items)
 
-    def add_item(self, item: BaseMenuItem) -> None:
+    def add_item(self, display: str, value: Any) -> None:
         """Adds a menu item to menu item list."""
-        self.menu_items.append(item)
+        self.menu_items.append({"display": display, "value": value})
 
-    def add_items(self, items: List[BaseMenuItem]) -> None:
+    def add_items(self, items: Dict[str, Any]) -> None:
         """Adds a list of menu items to menu item list."""
-        for item in items:
-            self.add_item(item)
+        for display, value in items.items():
+            self.add_item(display, value)
 
     def display(self) -> None:
         """Method to be overridden by each menu subclass."""
-        pass
 
-    def get_selection(self, selection: int) -> BaseMenuItem or None:
+    def get_selection(self, selection: int) -> Any:
         """Returns the menu item by index."""
         try:
             item = self.menu_items[selection - 1]
@@ -121,7 +75,7 @@ class BaseMenu(object):
             print(self.name)
 
         for i, menu_item in enumerate(self.menu_items, start=1):
-            print(f"{i:{width}}: {menu_item.display}")
+            print(f"{i:{width}}: {menu_item['display']}")
 
         if self.display_exit:
             print(f"{0:{width}}: {self.exit_text}")
@@ -135,7 +89,7 @@ class Menu(BaseMenu):
     """
     def __init__(self, name: str):
         """Inits Menu"""
-        super().__init__(name, MenuItem)
+        super().__init__(name)
 
     def display(self) -> None:
         """Displays the menu and calls selected callback."""
@@ -146,7 +100,7 @@ class Menu(BaseMenu):
         ) != 0:
             try:
                 item = self.get_selection(selection)
-                item.callback()
+                item["value"]()
             except IndexError:
                 print(self.invalid_option_text)
 
@@ -164,8 +118,7 @@ class BasicMenu(Menu):
                  items: Optional[Dict[str, Callable[[], None]]] = None):
         """Creates and displays the menu and menu items."""
         super().__init__(name)
-        menu_items = [MenuItem(k, v) for k, v in items.items()]
-        self.add_items(menu_items)
+        self.add_items(items)
         self.display()
 
 
@@ -176,7 +129,7 @@ class OptionMenu(BaseMenu):
     return the selected value."""
     def __init__(self, name: str):
         """Inits OptionMenu"""
-        super().__init__(name, OptionMenuItem, display_exit=False)
+        super().__init__(name, display_exit=False)
 
     def display(self) -> Any:
         """Displays display text for each menu option.
@@ -215,6 +168,5 @@ class BasicOptionMenu(OptionMenu):
     ):
         """Inits BasicOptionMenu"""
         super().__init__(name)
-        menu_items = [OptionMenuItem(k, v) for k, v in items.items()]
-        self.add_items(menu_items)
+        self.add_items(items)
         self.selection = self.display()
