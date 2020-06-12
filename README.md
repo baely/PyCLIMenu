@@ -7,7 +7,8 @@ CLI Menu module for Python.
 ### Standard usage
 
 ```python
-import menu
+
+from pyclimenu import menu
 
 main_menu = menu.Menu("Main Menu")
 
@@ -22,7 +23,8 @@ main_menu.display()
 Alternatively...
 
 ```python
-import menu
+
+from pyclimenu import menu
 
 menu.BasicMenu("Main Menu", {
     "Option 1": callback_1,
@@ -33,7 +35,8 @@ menu.BasicMenu("Main Menu", {
 ### Option menu
 
 ```python
-import menu
+
+from pyclimenu import menu
 
 color_menu = menu.OptionMenu("Color")
 
@@ -53,7 +56,8 @@ color = color_menu.display()
 Alternatively...
 
 ```python
-import menu
+
+from pyclimenu import menu
 
 color_menu = menu.BasicOptionMenu("Color", {
     "Red": (255, 0, 0),

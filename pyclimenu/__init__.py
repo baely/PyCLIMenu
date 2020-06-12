@@ -144,7 +144,7 @@ class OptionMenu(BaseMenu):
         ) != 0:
             try:
                 item = self.get_selection(selection)
-                return item.value
+                return item["value"]
             except IndexError:
                 print(self.invalid_option_text)
 
