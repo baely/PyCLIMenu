@@ -11,13 +11,10 @@ import menu
 
 main_menu = menu.Menu("Main Menu")
 
-menu_item_1 = menu.MenuItem("Option 1", callback=callback_1)
-menu_item_2 = menu.MenuItem("Option 2", callback=callback_2)
-
-main_menu.add_items([
-    menu_item_1,
-    menu_item_2
-])
+main_menu.add_items({
+    "Option 1": callback_1,
+    "Option 2": callback_2
+})
 
 main_menu.display()
 ```
