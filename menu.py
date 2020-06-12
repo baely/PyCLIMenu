@@ -37,7 +37,7 @@ class BaseMenu(object):
         self.name = name
         self.display_exit = display_exit
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Returns number of menu items."""
         return len(self.menu_items)
 
