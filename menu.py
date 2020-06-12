@@ -1,8 +1,10 @@
+"""Python module for creating menu in CLI"""
+
 import math
-from typing import Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List, Optional, Type
 
 
-class BaseMenuItem:
+class BaseMenuItem(object):
     """Represents the underlying menu item.
 
     This class is to be overridden by a menu item subclass that contains
@@ -39,13 +41,13 @@ class OptionMenuItem(BaseMenuItem):
     Attributes:
         value: Underlying value.
     """
-    def __init__(self, display: str, value: object):
+    def __init__(self, display: str, value: Any):
         """Inits OptionMenuItem with display and value"""
         super().__init__(display)
         self.value = value
 
 
-class BaseMenu:
+class BaseMenu(object):
     """Represents the base menu.
 
     This class is used to display a menu with automatic numbering and selection.
@@ -66,12 +68,10 @@ class BaseMenu:
     default_invalid_option_text: str = "Invalid option"
     default_selection_text: str = "Please select an option [0-{}]: "
 
-    def __init__(
-            self,
-            name: str = None,
-            menu_item_type: Type = BaseMenuItem,
-            display_exit: bool = True
-    ):
+    def __init__(self,
+                 name: Optional[str] = None,
+                 menu_item_type: Type = BaseMenuItem,
+                 display_exit: bool = True):
         """Inits BaseMenu."""
         self.menu_items: List[menu_item_type] = []
 
@@ -159,11 +159,9 @@ class BasicMenu(Menu):
     Basic Menu can be used in lieu of Menu when the implementation does not
     require the menu instance to be kept once the menu has been exited.
     """
-    def __init__(
-            self,
-            name: str = None,
-            items: Dict[str, Callable[[], None]] = None
-    ):
+    def __init__(self,
+                 name: Optional[str] = None,
+                 items: Optional[Dict[str, Callable[[], None]]] = None):
         """Creates and displays the menu and menu items."""
         super().__init__(name)
         menu_items = [MenuItem(k, v) for k, v in items.items()]
@@ -180,7 +178,7 @@ class OptionMenu(BaseMenu):
         """Inits OptionMenu"""
         super().__init__(name, OptionMenuItem, display_exit=False)
 
-    def display(self) -> object:
+    def display(self) -> Any:
         """Displays display text for each menu option.
 
         Returns:
@@ -212,8 +210,8 @@ class BasicOptionMenu(OptionMenu):
     """
     def __init__(
             self,
-            name: str = None,
-            items: Dict[str, object] = None
+            name: Optional[str] = None,
+            items: Optional[Dict[str, Any]] = None
     ):
         """Inits BasicOptionMenu"""
         super().__init__(name)
