@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="py-climenu",
-    version="0.0.2",
+    version="0.1.0",
     author="baely",
     author_email="contact@baely.dev",
     description="Python menu for CLI",
