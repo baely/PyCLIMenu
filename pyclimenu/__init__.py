@@ -1,7 +1,7 @@
 """Python module for creating menu in CLI"""
 
 import math
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 
 class BaseMenu:
@@ -23,6 +23,8 @@ class BaseMenu:
     default_exit_text: str = "Exit"
     default_invalid_option_text: str = "Invalid option"
     default_selection_text: str = "Please select an option [0-{}]: "
+
+    value_type: Type = Any
 
     def __init__(self,
                  name: Optional[str] = None,
@@ -102,7 +104,7 @@ class BaseMenu:
             print(f"{0:{width}}: {self.exit_text}")
 
     def prompt_selection(self) -> int:
-        """Prompt user for selection
+        """Prompt user for selection.
 
         Returns:
             Number of selection
@@ -118,7 +120,8 @@ class BaseBasicMenu(BaseMenu):
     """
     def __init__(self,
                  name: Optional[str] = None,
-                 items: Optional[Dict[str, Any]] = None):
+                 items: Union[
+                     Optional[Dict[str, Any]], List[Tuple[str, Any]]] = None):
         super().__init__(name)
         self.add_items(items)
         self.display()

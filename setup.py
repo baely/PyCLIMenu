@@ -4,7 +4,7 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="py-climenu",
+    name="climen",
     version="0.1.0",
     author="baely",
     author_email="contact@baely.dev",
